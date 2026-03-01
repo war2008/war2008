@@ -918,14 +918,13 @@ body {
     padding: 12px 30px;
     border: 1px solid #ad1717;
     background-color: rgba(173, 23, 23, 0.2);
-    transition: all 0.3s ease;
+    transition: all 0.15s ease;
     display: inline-block;
     letter-spacing: 2px;
 }
 
 .telegram-button-data:hover {
     background-color: #ad1717;
-    transform: scale(1.05);
 }
 
 /* Стили для скролла внутри модальных окон */
