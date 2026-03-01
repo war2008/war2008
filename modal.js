@@ -46,10 +46,46 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             e.stopPropagation();
             contentModal.style.display = 'block';
+            
+            // После открытия модального окна добавляем обработчики для ссылок
+            addContentLinksHandlers(contentModal);
         });
         
         // Убираем hover-эффекты, оставляем только pointer
         menuTrigger.style.cursor = 'pointer';
+    }
+    
+    // Функция для добавления обработчиков на ссылки в модальном окне содержания
+    function addContentLinksHandlers(modal) {
+        const links = modal.querySelectorAll('.content-links-list a');
+        
+        links.forEach(link => {
+            // Удаляем старый обработчик, если был, чтобы не было дублирования
+            link.removeEventListener('click', handleContentLinkClick);
+            // Добавляем новый обработчик
+            link.addEventListener('click', handleContentLinkClick);
+        });
+    }
+    
+    // Обработчик клика по ссылке в содержании
+    function handleContentLinkClick(e) {
+        e.preventDefault(); // Предотвращаем стандартный переход
+        
+        const href = this.getAttribute('href');
+        if (href && href.startsWith('#')) {
+            const targetId = href.substring(1); // убираем #
+            const targetSection = document.getElementById(targetId);
+            
+            if (targetSection) {
+                // Плавно прокручиваем к секции
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+                
+                // Закрываем модальное окно
+                if (contentModal) {
+                    contentModal.style.display = 'none';
+                }
+            }
+        }
     }
     
     // Закрытие по клику вне модального окна
