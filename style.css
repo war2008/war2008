@@ -66,6 +66,7 @@ body {
     min-height: 100vh;
 }
 
+/* --- Фиксированный логотип --- */
 .fixed-logo {
     position: fixed;
     top: 20px;
@@ -75,6 +76,14 @@ body {
     mix-blend-mode: difference;
     transition: opacity 0.3s ease, visibility 0.3s ease;
     overflow: hidden;
+}
+
+/* Правый фиксированный логотип */
+.fixed-logo.right-logo {
+    left: auto;
+    right: 20px;
+    top: 20px;
+    cursor: pointer;
 }
 
 .fixed-logo.hidden {
@@ -181,7 +190,7 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 40px; /* одинаковый отступ для всех баннеров */
+    gap: 40px;
     width: 100%;
     max-width: 1000px;
     padding: 0 50px;
@@ -480,13 +489,10 @@ body {
 .footer-nav {
     margin-top: auto;
     display: grid;
-    /* 6 колонок (по одной на каждый вертикальный ряд) */
     grid-template-columns: repeat(6, max-content);
-    /* 6 рядов (так как у вас максимум 6 ссылок в колонке) */
     grid-template-rows: repeat(6, auto);
     column-gap: 30px;
     row-gap: 6px;
-    /* Добавляем auto-flow в столбик, чтобы элементы заполнялись по колонкам */
     grid-auto-flow: column;
 }
 
@@ -550,7 +556,6 @@ body {
     border: 2px solid #ad1717;
     box-shadow: 0 0 40px rgba(173, 23, 23, 0.4);
     animation: modalFadeIn 0.2s ease;
-    /* Гарантируем, что контент не выходит за пределы экрана */
     box-sizing: border-box;
     max-height: 90vh;
     overflow-y: auto;
@@ -567,7 +572,6 @@ body {
     }
 }
 
-/* Улучшенный крестик закрытия - всегда видимый */
 .modal-close {
     position: absolute;
     right: 20px;
@@ -584,7 +588,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(173, 23, 23, 0.8); /* Красный фон для видимости */
+    background-color: rgba(173, 23, 23, 0.8);
     border-radius: 50%;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -592,7 +596,7 @@ body {
 
 .modal-close:hover {
     color: #ffffff;
-    background-color: #ad1717; /* Ярче при наведении */
+    background-color: #ad1717;
     transform: scale(1.1) rotate(90deg);
 }
 
@@ -642,7 +646,6 @@ body {
     margin-bottom: 0;
 }
 
-/* Стили для дополнительного текста, если понадобится */
 .modal-text .modal-description {
     font-size: 18px;
     color: rgba(255, 255, 255, 0.8);
@@ -695,7 +698,6 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Стили для кликабельных изображений */
 .section-image-placeholder img {
     cursor: pointer;
     transition: opacity 0.3s ease, transform 0.3s ease;
@@ -704,30 +706,6 @@ body {
 .section-image-placeholder img:hover {
     opacity: 0.9;
     transform: scale(1.02);
-}
-
-/* Адаптивность для модального окна изображений */
-@media screen and (max-width: 768px) {
-    .image-modal-caption {
-        bottom: 10px;
-        right: 10px;
-        font-size: 14px;
-        padding: 6px 12px;
-        max-width: 80%;
-    }
-    
-    .image-view-modal .modal-content {
-        padding: 10px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .image-modal-caption {
-        font-size: 12px;
-        padding: 4px 8px;
-        bottom: 5px;
-        right: 5px;
-    }
 }
 
 /* ===== Стили для галереи ===== */
@@ -794,7 +772,7 @@ body {
     background: rgba(0,0,0,0.3);
 }
 
-/* ===== Стили для информационного модального окна (Материалы и Контакты) ===== */
+/* ===== Стили для информационного модального окна ===== */
 .info-modal-content {
     max-width: 800px;
 }
@@ -863,34 +841,123 @@ body {
     color: #e02b2b;
 }
 
+/* ===== Стили для модального окна содержания ===== */
+.content-modal-content {
+    max-width: 600px;
+}
+
+.content-modal-body {
+    flex-direction: column;
+    gap: 20px;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.content-modal-data {
+    width: 100%;
+}
+
+.content-title {
+    font-family: var(--accent_font);
+    font-size: 42px;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    border-bottom: 2px solid #ad1717;
+    padding-bottom: 15px;
+}
+
+.content-links-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 30px;
+}
+
+.content-links-list a {
+    font-family: var(--basics_font);
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+    display: block;
+}
+
+.content-links-list a:hover {
+    color: #ffffff;
+    background-color: rgba(173, 23, 23, 0.2);
+    border-left-color: #ad1717;
+    padding-left: 20px;
+}
+
+.content-links-list a span {
+    color: #ad1717;
+    font-weight: bold;
+    margin-right: 8px;
+    display: inline-block;
+    min-width: 30px;
+}
+
+.content-telegram-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.telegram-button-data {
+    font-family: var(--basics_font);
+    font-size: 24px;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 30px;
+    border: 1px solid #ad1717;
+    background-color: rgba(173, 23, 23, 0.2);
+    transition: all 0.3s ease;
+    display: inline-block;
+    letter-spacing: 2px;
+}
+
+.telegram-button-data:hover {
+    background-color: #ad1717;
+    transform: scale(1.05);
+}
+
 /* Стили для скролла внутри модальных окон */
 .gallery-modal-body::-webkit-scrollbar,
-.info-modal-body::-webkit-scrollbar {
+.info-modal-body::-webkit-scrollbar,
+.content-modal-body::-webkit-scrollbar {
     width: 8px;
 }
 
 .gallery-modal-body::-webkit-scrollbar-track,
-.info-modal-body::-webkit-scrollbar-track {
+.info-modal-body::-webkit-scrollbar-track,
+.content-modal-body::-webkit-scrollbar-track {
     background: #2a2a2a;
     border-radius: 4px;
 }
 
 .gallery-modal-body::-webkit-scrollbar-thumb,
-.info-modal-body::-webkit-scrollbar-thumb {
+.info-modal-body::-webkit-scrollbar-thumb,
+.content-modal-body::-webkit-scrollbar-thumb {
     background: #ad1717;
     border-radius: 4px;
 }
 
 .gallery-modal-body::-webkit-scrollbar-thumb:hover,
-.info-modal-body::-webkit-scrollbar-thumb:hover {
+.info-modal-body::-webkit-scrollbar-thumb:hover,
+.content-modal-body::-webkit-scrollbar-thumb:hover {
     background: #e02b2b;
 }
 
 /* ===== АДАПТИВНОСТЬ ===== */
-/* Правила для планшетов и телефонов (ширина экрана 1024px и меньше) */
 @media screen and (max-width: 1024px) {
 
-    /* --- Глобальные изменения для мобилок --- */
     .section-content {
         flex-direction: column !important;
         padding: 40px 20px !important;
@@ -899,7 +966,6 @@ body {
         box-sizing: border-box !important;
     }
 
-    /* --- Фиксированный логотип --- */
     .fixed-logo {
         top: 10px !important;
         left: 10px !important;
@@ -907,7 +973,26 @@ body {
         transform-origin: top left !important;
     }
 
-    /* --- Блоки с текстом --- */
+    .fixed-logo.right-logo {
+        left: auto !important;
+        right: 20px !important;
+        top: 10px !important;
+        transform: scale(0.7) !important;
+        transform-origin: top right !important;
+        mix-blend-mode: difference;
+        cursor: pointer;
+        transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.2s ease;
+    }
+
+    .fixed-logo.right-logo:hover {
+        transform: scale(0.75) !important;
+    }
+
+    .fixed-logo.right-logo.hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+
     .section-text-block,
     .dark-block,
     .light-block {
@@ -916,14 +1001,12 @@ body {
         width: 100% !important;
     }
 
-    /* --- Изображения --- */
     .section-image-placeholder {
         max-width: 100% !important;
         width: 100% !important;
         order: -1 !important;
     }
 
-    /* --- Заголовки и текст --- */
     .section-title, .dark-title, .light-title {
         font-size: 36px !important;
         width: 100% !important;
@@ -934,7 +1017,6 @@ body {
         max-width: 100% !important;
     }
 
-    /* --- ГЕРО-БЛОКИ (баннеры) --- */
     .main__hero-content {
         flex-direction: column !important;
         gap: 30px !important;
@@ -969,7 +1051,6 @@ body {
         max-width: 100% !important;
     }
 
-    /* --- ФУТЕР --- */
     .footer {
         padding: 40px 20px 80px 20px !important;
         min-height: auto !important;
@@ -1067,12 +1148,11 @@ body {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
     }
 
-    /* --- МОДАЛЬНЫЕ ОКНА (исправленные) --- */
     .modal-content {
-        margin: 10% 20px !important; /* Отступы по бокам вместо auto */
+        margin: 10% 20px !important;
         padding: 20px !important;
-        width: auto !important; /* Убираем фиксированную ширину */
-        max-width: calc(100% - 40px) !important; /* Максимальная ширина с отступами */
+        width: auto !important;
+        max-width: calc(100% - 40px) !important;
         left: 0 !important;
         right: 0 !important;
         box-sizing: border-box !important;
@@ -1094,18 +1174,16 @@ body {
         margin-bottom: 15px !important;
     }
 
-    /* Улучшенный крестик для мобильных */
     .modal-close {
         right: 10px !important;
         top: 10px !important;
-        width: 44px !important; /* Чуть больше для удобного нажатия */
+        width: 44px !important;
         height: 44px !important;
         font-size: 36px !important;
         background-color: rgba(173, 23, 23, 0.9) !important;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
     }
 
-    /* --- МОДАЛЬНАЯ ГАЛЕРЕЯ --- */
     .gallery-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
         gap: 15px !important;
@@ -1113,15 +1191,49 @@ body {
 
     .gallery-modal-title {
         font-size: 32px !important;
-        padding-right: 40px !important; /* Место для крестика */
+        padding-right: 40px !important;
     }
 
     .info-modal-title {
         font-size: 32px !important;
-        padding-right: 40px !important; /* Место для крестика */
+        padding-right: 40px !important;
+    }
+    
+    .content-modal-content {
+        max-width: 90% !important;
+    }
+    
+    .content-title {
+        font-size: 32px !important;
+        padding-right: 40px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .content-links-list {
+        gap: 6px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .content-links-list a {
+        font-size: 16px !important;
+        padding: 6px 10px !important;
+    }
+    
+    .content-links-list a span {
+        min-width: 25px !important;
+        font-size: 14px !important;
+    }
+    
+    .telegram-button-data {
+        font-size: 20px !important;
+        padding: 10px 20px !important;
+    }
+    
+    .content-modal-body {
+        padding: 15px !important;
+        max-height: 80vh !important;
     }
 
-    /* Для планшетов */
     @media screen and (min-width: 768px) and (max-width: 1024px) {
         .footer-grid {
             max-width: 400px !important;
@@ -1132,7 +1244,6 @@ body {
     }
 }
 
-/* ===== ДОПОЛНИТЕЛЬНО для совсем маленьких телефонов (до 600px) ===== */
 @media screen and (max-width: 600px) {
     .main__hero-h1 {
         font-size: 32px !important;
@@ -1170,5 +1281,117 @@ body {
         width: 40px !important;
         height: 40px !important;
         font-size: 32px !important;
+    }
+    
+    .content-title {
+        font-size: 28px !important;
+    }
+    
+    .content-links-list a {
+        font-size: 14px !important;
+        padding: 5px 8px !important;
+    }
+    
+    .content-links-list a span {
+        min-width: 22px !important;
+        font-size: 12px !important;
+    }
+    
+    .telegram-button-data {
+        font-size: 18px !important;
+        padding: 8px 16px !important;
+    }
+}
+
+/* ===== МОБИЛЬНАЯ ВЕРСИЯ - УЛУЧШЕНИЯ ДЛЯ МОДАЛЬНОГО ОКНА СОДЕРЖАНИЯ ===== */
+@media screen and (max-width: 768px) {
+    .content-modal-content .content-links-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+    }
+    
+    .content-modal-content .content-links-list a {
+        font-size: 22px !important;
+        padding: 15px 20px !important;
+        text-align: center;
+        border-left: none;
+        border-bottom: 2px solid rgba(173, 23, 23, 0.3);
+        width: 100%;
+        box-sizing: border-box;
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        margin: 0;
+        line-height: 1.4;
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .content-modal-content .content-links-list a span {
+        font-size: 20px !important;
+        margin-right: 12px;
+        min-width: 35px;
+    }
+    
+    .content-modal-content .content-links-list a:hover,
+    .content-modal-content .content-links-list a:active {
+        background-color: rgba(173, 23, 23, 0.3);
+        border-bottom-color: #ad1717;
+        padding-left: 20px !important;
+    }
+    
+    .content-modal-content .content-title {
+        font-size: 36px !important;
+        margin-bottom: 25px;
+    }
+    
+    .content-modal-content .telegram-button-data {
+        font-size: 24px !important;
+        padding: 15px 30px !important;
+        min-height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        box-sizing: border-box;
+        border-width: 2px;
+    }
+    
+    .content-modal-content .content-telegram-wrapper {
+        width: 100%;
+        margin-top: 25px;
+        padding-top: 20px;
+    }
+    
+    .content-modal-content .content-modal-body {
+        padding: 15px 15px 25px 15px;
+    }
+}
+
+/* Дополнительные улучшения для очень маленьких экранов */
+@media screen and (max-width: 480px) {
+    .content-modal-content .content-links-list a {
+        font-size: 20px !important;
+        padding: 14px 15px !important;
+        min-height: 55px;
+    }
+    
+    .content-modal-content .content-links-list a span {
+        font-size: 18px !important;
+        min-width: 32px;
+    }
+    
+    .content-modal-content .content-title {
+        font-size: 32px !important;
+    }
+    
+    .content-modal-content .telegram-button-data {
+        font-size: 22px !important;
+        padding: 14px 20px !important;
+        min-height: 65px;
     }
 }

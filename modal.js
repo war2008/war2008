@@ -2,6 +2,63 @@
 
 // Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', function() {
+    // === МОДАЛЬНОЕ ОКНО СОДЕРЖАНИЯ (правый логотип) ===
+    const menuTrigger = document.querySelector('.fixed-logo.right-logo');
+    const hiddenContent = document.getElementById('hidden-content-modal'); // Исправлено: теперь ID совпадает с HTML
+    
+    // Создаем модальное окно для содержания, если его нет
+    let contentModal = document.getElementById('content-modal');
+    if (!contentModal && hiddenContent) {
+        contentModal = document.createElement('div');
+        contentModal.id = 'content-modal';
+        contentModal.className = 'modal';
+        
+        const modalContent = document.createElement('div');
+        modalContent.className = 'modal-content content-modal-content';
+        
+        const closeBtn = document.createElement('span');
+        closeBtn.className = 'modal-close content-close';
+        closeBtn.innerHTML = '&times;';
+        
+        const modalBody = document.createElement('div');
+        modalBody.className = 'modal-body content-modal-body';
+        
+        // Берем контент из скрытого блока
+        const contentData = hiddenContent.querySelector('.content-modal-data');
+        if (contentData) {
+            modalBody.appendChild(contentData.cloneNode(true));
+        }
+        
+        modalContent.appendChild(closeBtn);
+        modalContent.appendChild(modalBody);
+        contentModal.appendChild(modalContent);
+        document.body.appendChild(contentModal);
+        
+        // Закрытие по крестику
+        closeBtn.addEventListener('click', function() {
+            contentModal.style.display = 'none';
+        });
+    }
+    
+    // Обработчик клика на правый логотип
+    if (menuTrigger && contentModal) {
+        menuTrigger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            contentModal.style.display = 'block';
+        });
+        
+        // Убираем hover-эффекты, оставляем только pointer
+        menuTrigger.style.cursor = 'pointer';
+    }
+    
+    // Закрытие по клику вне модального окна
+    window.addEventListener('click', function(e) {
+        if (contentModal && e.target === contentModal) {
+            contentModal.style.display = 'none';
+        }
+    });
+
     // 1. ОСНОВНОЕ МОДАЛЬНОЕ ОКНО (для data-person)
     const modal = document.getElementById('modal');
     const modalImage = document.getElementById('modal-image');
@@ -191,6 +248,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (infoModal && infoModal.style.display === 'block') {
                 infoModal.style.display = 'none';
             }
+            if (contentModal && contentModal.style.display === 'block') {
+                contentModal.style.display = 'none';
+            }
         }
     });
 
@@ -312,95 +372,91 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-	
-	// === ДОПОЛНЕНИЕ: Открытие изображений из галереи в увеличенном виде ===
-// Добавляем обработчики для изображений в галерее
-function addGalleryImageClickHandlers() {
-    const galleryItems = document.querySelectorAll('.gallery-item-image');
     
-    galleryItems.forEach((item, index) => {
-        item.style.cursor = 'pointer';
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Получаем фоновое изображение
-            const bgImage = this.style.backgroundImage;
-            const imageUrl = bgImage.slice(5, -2); // Убираем url(" и ")
-            
-            // Получаем подпись
-            const caption = this.nextElementSibling?.textContent || '';
-            
-            // Устанавливаем в модальное окно
-            const imageModal = document.getElementById('image-view-modal');
-            const imageModalImg = document.getElementById('expanded-image');
-            const imageCaption = document.getElementById('image-caption');
-            
-            if (imageModal && imageModalImg) {
-                imageModalImg.src = imageUrl;
-                imageModalImg.alt = caption || 'Изображение из галереи';
+    // === ДОПОЛНЕНИЕ: Открытие изображений из галереи в увеличенном виде ===
+    // Добавляем обработчики для изображений в галерее
+    function addGalleryImageClickHandlers() {
+        const galleryItems = document.querySelectorAll('.gallery-item-image');
+        
+        galleryItems.forEach((item, index) => {
+            item.style.cursor = 'pointer';
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
                 
-                if (caption) {
-                    imageCaption.textContent = caption;
-                    imageCaption.style.display = 'block';
-                } else {
-                    imageCaption.style.display = 'none';
+                // Получаем фоновое изображение
+                const bgImage = this.style.backgroundImage;
+                const imageUrl = bgImage.slice(5, -2); // Убираем url(" и ")
+                
+                // Получаем подпись
+                const caption = this.nextElementSibling?.textContent || '';
+                
+                // Устанавливаем в модальное окно
+                const imageModal = document.getElementById('image-view-modal');
+                const imageModalImg = document.getElementById('expanded-image');
+                const imageCaption = document.getElementById('image-caption');
+                
+                if (imageModal && imageModalImg) {
+                    imageModalImg.src = imageUrl;
+                    imageModalImg.alt = caption || 'Изображение из галереи';
+                    
+                    if (caption) {
+                        imageCaption.textContent = caption;
+                        imageCaption.style.display = 'block';
+                    } else {
+                        imageCaption.style.display = 'none';
+                    }
+                    
+                    imageModal.style.display = 'block';
                 }
-                
-                imageModal.style.display = 'block';
-            }
+            });
         });
-    });
-}
+    }
 
-// Модифицируем функцию loadGallery для добавления обработчиков после загрузки
-function loadGallery() {
-    if (!galleryGrid || !hiddenGalleryContent) return;
-    galleryGrid.innerHTML = ''; // Очищаем перед загрузкой
-    
-    const galleryItems = hiddenGalleryContent.querySelectorAll('.gallery-item-src');
-    
-    galleryItems.forEach(item => {
-        const imageDiv = item.querySelector('.gallery-image-src');
-        const caption = item.querySelector('.gallery-caption-src')?.textContent || '';
-        const imageSrc = imageDiv?.getAttribute('data-src') || '';
+    // Модифицируем функцию loadGallery для добавления обработчиков после загрузки
+    const originalLoadGallery = loadGallery;
+    loadGallery = function() {
+        if (!galleryGrid || !hiddenGalleryContent) return;
+        galleryGrid.innerHTML = ''; // Очищаем перед загрузкой
         
-        const galleryItem = document.createElement('div');
-        galleryItem.className = 'gallery-item';
+        const galleryItems = hiddenGalleryContent.querySelectorAll('.gallery-item-src');
         
-        const imgDiv = document.createElement('div');
-        imgDiv.className = 'gallery-item-image';
-        imgDiv.style.backgroundImage = `url('${imageSrc}')`;
-        imgDiv.style.backgroundSize = 'cover';
-        imgDiv.style.backgroundPosition = 'center';
+        galleryItems.forEach(item => {
+            const imageDiv = item.querySelector('.gallery-image-src');
+            const caption = item.querySelector('.gallery-caption-src')?.textContent || '';
+            const imageSrc = imageDiv?.getAttribute('data-src') || '';
+            
+            const galleryItem = document.createElement('div');
+            galleryItem.className = 'gallery-item';
+            
+            const imgDiv = document.createElement('div');
+            imgDiv.className = 'gallery-item-image';
+            imgDiv.style.backgroundImage = `url('${imageSrc}')`;
+            imgDiv.style.backgroundSize = 'cover';
+            imgDiv.style.backgroundPosition = 'center';
+            
+            const captionDiv = document.createElement('div');
+            captionDiv.className = 'gallery-item-caption';
+            captionDiv.textContent = caption;
+            
+            galleryItem.appendChild(imgDiv);
+            galleryItem.appendChild(captionDiv);
+            galleryGrid.appendChild(galleryItem);
+        });
         
-        const captionDiv = document.createElement('div');
-        captionDiv.className = 'gallery-item-caption';
-        captionDiv.textContent = caption;
-        
-        galleryItem.appendChild(imgDiv);
-        galleryItem.appendChild(captionDiv);
-        galleryGrid.appendChild(galleryItem);
-    });
-    
-		// Добавляем обработчики для новых изображений
-		addGalleryImageClickHandlers();
-	}
+        // Добавляем обработчики для новых изображений
+        addGalleryImageClickHandlers();
+    };
 
-	// Также добавляем обработчики при открытии галереи, если изображения уже загружены
-	// Это дублируется, но гарантирует работу
-	if (galleryBtn && galleryModal) {
-		// Сохраняем оригинальный обработчик
-		const originalClickHandler = galleryBtn.onclick;
-		
-		// Заменяем на новый с добавлением обработчиков
-		galleryBtn.addEventListener('click', function(e) {
-			e.preventDefault();
-			loadGallery();
-			galleryModal.style.display = 'block';
-			
-			// Добавляем обработчики после загрузки (на всякий случай)
-			setTimeout(addGalleryImageClickHandlers, 100);
-		});
-	}
+    // Также добавляем обработчики при открытии галереи, если изображения уже загружены
+    if (galleryBtn && galleryModal) {
+        galleryBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loadGallery();
+            galleryModal.style.display = 'block';
+            
+            // Добавляем обработчики после загрузки (на всякий случай)
+            setTimeout(addGalleryImageClickHandlers, 100);
+        });
+    }
 });
