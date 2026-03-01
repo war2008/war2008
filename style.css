@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Plaster&family=Rubik+80s+Fade&family=Alumni+Sans+SC&display=swap');
 
+/* Root variables: Defines the global color scheme, fonts, and cursor for the entire site */
 :root {
     --logo_font: 'Plaster', system-ui, sans-serif;
     --accent_font: 'Rubik 80s Fade', system-ui, sans-serif;
@@ -14,7 +15,7 @@
     --radiation_cursor: url("media/cursor.png") 0 0, auto;
 }
 
-/*Настройки скроллинга*/
+/* Scroll settings: Enables smooth snap scrolling between sections for the main container */
 html, body {
     height: 100%;
     margin: 0;
@@ -66,7 +67,7 @@ body {
     min-height: 100vh;
 }
 
-/* --- Фиксированный логотип --- */
+/* Fixed logo section: Styles for logos that remain in place during scroll, with a mix-blend-mode effect */
 .fixed-logo {
     position: fixed;
     top: 20px;
@@ -78,7 +79,7 @@ body {
     overflow: hidden;
 }
 
-/* Правый фиксированный логотип */
+/* Right fixed logo: Positioned on the right side, used as a menu trigger */
 .fixed-logo.right-logo {
     left: auto;
     right: 20px;
@@ -102,6 +103,7 @@ body {
     min-height: 100vh;
 }
 
+/* Noise overlay: Adds a subtle animated noise effect over each section */
 .section::before {
     content: "";
     position: absolute;
@@ -112,6 +114,7 @@ body {
     z-index: 0;
 }
 
+/* Section content layout: Flex container for image and text blocks within a section */
 .section-content {
     width: 100%;
     max-width: 1200px;
@@ -149,6 +152,7 @@ body {
     height: 100%;
 }
 
+/* Hero sections: Full-screen banners with background images and overlays */
 .main__hero,
 .main__hero2,
 .main__hero3,
@@ -272,7 +276,7 @@ body {
     align-items: center;
 }
 
-/* ===== Кнопка 1 ===== */
+/* Button style 1: Square button with a sliding red background on hover */
 .button {
     font-family: var(--basics_font);
     color: #ffffff;
@@ -320,7 +324,7 @@ body {
     border-color: transparent;
 }
 
-/* ===== Кнопка 2 ===== */
+/* Button style 2: Taller version of the button for hero sections */
 .button2 {
     font-family: var(--basics_font);
     color: #ffffff;
@@ -368,6 +372,7 @@ body {
     border-color: transparent;
 }
 
+/* Light section type 1: Light grey background for narrative sections */
 .main__section--type1 {
     background-color: #dedede;
     display: flex;
@@ -405,6 +410,7 @@ body {
     height: 0px;
 }
 
+/* Dark section type 2: Black background with white text for contrast */
 .main__section--type2 {
     background-color: #111;
     display: flex;
@@ -453,7 +459,7 @@ body {
     background-color: #bd2121;
 }
 
-/*========ФУТЕР========*/
+/* Footer section: Dark background with navigation grid and action buttons */
 .footer {
     min-height: 100vh;
     scroll-snap-align: start;
@@ -533,7 +539,7 @@ body {
     height: 168px;
 }
 
-/* ===== Общие стили модальных окон ===== */
+/* General modal window styles: Shared styles for all popup modals */
 .modal {
     display: none;
     position: fixed;
@@ -654,7 +660,7 @@ body {
     margin-top: 20px;
 }
 
-/* === МОДАЛЬНОЕ ОКНО ДЛЯ ИЗОБРАЖЕНИЙ === */
+/* Image view modal: Special modal for viewing enlarged images with a caption */
 .image-view-modal .modal-content {
     background-color: rgba(0, 0, 0, 0.95);
     border: 2px solid #ad1717;
@@ -708,7 +714,7 @@ body {
     transform: scale(1.02);
 }
 
-/* ===== Стили для галереи ===== */
+/* Gallery modal styles: Grid layout for displaying multiple images */
 .gallery-modal-content {
     max-width: 1200px;
     width: 95%;
@@ -772,7 +778,7 @@ body {
     background: rgba(0,0,0,0.3);
 }
 
-/* ===== Стили для информационного модального окна ===== */
+/* Info modal styles: For displaying text-heavy content like sources and contacts */
 .info-modal-content {
     max-width: 800px;
 }
@@ -841,7 +847,7 @@ body {
     color: #e02b2b;
 }
 
-/* ===== Стили для модального окна содержания ===== */
+/* Content modal styles: For the table of contents with navigation links */
 .content-modal-content {
     max-width: 600px;
 }
@@ -927,7 +933,7 @@ body {
     background-color: #ad1717;
 }
 
-/* Стили для скролла внутри модальных окон */
+/* Scrollbar styles: Custom scrollbar for modal content */
 .gallery-modal-body::-webkit-scrollbar,
 .info-modal-body::-webkit-scrollbar,
 .content-modal-body::-webkit-scrollbar {
@@ -954,7 +960,7 @@ body {
     background: #e02b2b;
 }
 
-/* ===== АДАПТИВНОСТЬ ===== */
+/* Responsive design: Adjustments for tablet and mobile viewports */
 @media screen and (max-width: 1024px) {
 
     .section-content {
@@ -1302,7 +1308,7 @@ body {
     }
 }
 
-/* ===== МОБИЛЬНАЯ ВЕРСИЯ - УЛУЧШЕНИЯ ДЛЯ МОДАЛЬНОГО ОКНА СОДЕРЖАНИЯ ===== */
+/* Mobile content modal: Enhanced styles for the table of contents on small screens */
 @media screen and (max-width: 768px) {
     .content-modal-content .content-links-list {
         display: flex;
@@ -1371,7 +1377,7 @@ body {
     }
 }
 
-/* Дополнительные улучшения для очень маленьких экранов */
+/* Extra small devices: Further adjustments for very narrow viewports */
 @media screen and (max-width: 480px) {
     .content-modal-content .content-links-list a {
         font-size: 20px !important;

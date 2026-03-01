@@ -1,14 +1,14 @@
-// Оптимизированный script.js
+/* ---------- DOM ELEMENTS ---------- */
 document.addEventListener('DOMContentLoaded', function() {
     const logo = document.querySelector('.fixed-logo');
     const footer = document.querySelector('.footer');
     
     if (!logo || !footer) return;
-    
-    // Используем requestAnimationFrame для оптимизации производительности
+
     let ticking = false;
     let lastScrollY = window.scrollY;
-    
+
+    /* ---------- FOOTER VISIBILITY CHECK ---------- */
     function checkFooterVisibility() {
         const footerRect = footer.getBoundingClientRect();
         const windowHeight = window.innerHeight;
@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
             logo.classList.remove('hidden');
         }
     }
-    
+
+    /* ---------- SCROLL HANDLER ---------- */
     function onScroll() {
         lastScrollY = window.scrollY;
         
@@ -32,10 +33,10 @@ document.addEventListener('DOMContentLoaded', function() {
             ticking = true;
         }
     }
-    
-    // Используем пассивный слушатель для улучшения производительности скролла
+
+    /* ---------- EVENT LISTENERS ---------- */
     window.addEventListener('scroll', onScroll, { passive: true });
-    
-    // Проверяем сразу после загрузки
+
+    /* ---------- INITIAL CHECK ---------- */
     checkFooterVisibility();
 });

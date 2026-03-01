@@ -1,139 +1,101 @@
-// modal.js - Обновленная версия с загрузкой контента из скрытых блоков
-
-// Инициализация при загрузке страницы
+/* ---------- DOM CONTENT LOADED ---------- */
 document.addEventListener('DOMContentLoaded', function() {
-    // === МОДАЛЬНОЕ ОКНО СОДЕРЖАНИЯ (правый логотип) ===
+
+    /* ---------- RIGHT LOGO CONTENT MODAL ---------- */
     const menuTrigger = document.querySelector('.fixed-logo.right-logo');
-    const hiddenContent = document.getElementById('hidden-content-modal'); // Исправлено: теперь ID совпадает с HTML
-    
-    // Создаем модальное окно для содержания, если его нет
+    const hiddenContent = document.getElementById('hidden-content-modal');
     let contentModal = document.getElementById('content-modal');
+
     if (!contentModal && hiddenContent) {
         contentModal = document.createElement('div');
         contentModal.id = 'content-modal';
         contentModal.className = 'modal';
-        
+
         const modalContent = document.createElement('div');
         modalContent.className = 'modal-content content-modal-content';
-        
+
         const closeBtn = document.createElement('span');
         closeBtn.className = 'modal-close content-close';
         closeBtn.innerHTML = '&times;';
-        
+
         const modalBody = document.createElement('div');
         modalBody.className = 'modal-body content-modal-body';
-        
-        // Берем контент из скрытого блока
+
         const contentData = hiddenContent.querySelector('.content-modal-data');
-        if (contentData) {
-            modalBody.appendChild(contentData.cloneNode(true));
-        }
-        
+        if (contentData) modalBody.appendChild(contentData.cloneNode(true));
+
         modalContent.appendChild(closeBtn);
         modalContent.appendChild(modalBody);
         contentModal.appendChild(modalContent);
         document.body.appendChild(contentModal);
-        
-        // Закрытие по крестику
+
         closeBtn.addEventListener('click', function() {
             contentModal.style.display = 'none';
         });
     }
-    
-    // Обработчик клика на правый логотип
+
     if (menuTrigger && contentModal) {
         menuTrigger.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             contentModal.style.display = 'block';
-            
-            // После открытия модального окна добавляем обработчики для ссылок
             addContentLinksHandlers(contentModal);
         });
-        
-        // Убираем hover-эффекты, оставляем только pointer
         menuTrigger.style.cursor = 'pointer';
     }
-    
-    // Функция для добавления обработчиков на ссылки в модальном окне содержания
+
     function addContentLinksHandlers(modal) {
         const links = modal.querySelectorAll('.content-links-list a');
-        
         links.forEach(link => {
-            // Удаляем старый обработчик, если был, чтобы не было дублирования
             link.removeEventListener('click', handleContentLinkClick);
-            // Добавляем новый обработчик
             link.addEventListener('click', handleContentLinkClick);
         });
     }
-    
-    // Обработчик клика по ссылке в содержании
+
     function handleContentLinkClick(e) {
-        e.preventDefault(); // Предотвращаем стандартный переход
-        
+        e.preventDefault();
         const href = this.getAttribute('href');
         if (href && href.startsWith('#')) {
-            const targetId = href.substring(1); // убираем #
-            const targetSection = document.getElementById(targetId);
-            
+            const targetSection = document.getElementById(href.substring(1));
             if (targetSection) {
-                // Плавно прокручиваем к секции
                 targetSection.scrollIntoView({ behavior: 'smooth' });
-                
-                // Закрываем модальное окно
-                if (contentModal) {
-                    contentModal.style.display = 'none';
-                }
+                if (contentModal) contentModal.style.display = 'none';
             }
         }
     }
-    
-    // Закрытие по клику вне модального окна
+
     window.addEventListener('click', function(e) {
-        if (contentModal && e.target === contentModal) {
-            contentModal.style.display = 'none';
-        }
+        if (contentModal && e.target === contentModal) contentModal.style.display = 'none';
     });
 
-    // 1. ОСНОВНОЕ МОДАЛЬНОЕ ОКНО (для data-person)
+    /* ---------- MAIN MODAL (DATA-PERSON) ---------- */
     const modal = document.getElementById('modal');
     const modalImage = document.getElementById('modal-image');
     const modalTitle = document.getElementById('modal-title');
     const modalDescription = document.getElementById('modal-description');
     const closeBtn = modal?.querySelector('.modal-close');
-    
-    // Получаем скрытые контенты
     const hiddenModalContent = document.getElementById('hidden-modal-content');
-    
-    // Создаем карту контента для быстрого доступа
     const contentMap = new Map();
+
     if (hiddenModalContent) {
-        const items = hiddenModalContent.querySelectorAll('[data-person]');
-        items.forEach(item => {
+        hiddenModalContent.querySelectorAll('[data-person]').forEach(item => {
             const personId = item.getAttribute('data-person');
-            const imageSrc = item.querySelector('.modal-image-src')?.getAttribute('data-image') || '';
-            const title = item.querySelector('.modal-title-src')?.textContent || '';
-            const description = item.querySelector('.modal-description-src')?.innerHTML || '';
-            
             contentMap.set(personId, {
-                image: imageSrc,
-                title: title,
-                description: description
+                image: item.querySelector('.modal-image-src')?.getAttribute('data-image') || '',
+                title: item.querySelector('.modal-title-src')?.textContent || '',
+                description: item.querySelector('.modal-description-src')?.innerHTML || ''
             });
         });
     }
-    
-    // Обработчик для всех кликабельных ссылок
+
     document.querySelectorAll('.clickable-link').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const personId = this.getAttribute('data-person');
             const data = contentMap.get(personId);
-            
             if (data && modal) {
                 modalTitle.textContent = data.title;
                 modalDescription.innerHTML = data.description;
-                
                 if (data.image) {
                     modalImage.style.backgroundImage = `url('${data.image}')`;
                     modalImage.style.backgroundSize = 'cover';
@@ -142,156 +104,102 @@ document.addEventListener('DOMContentLoaded', function() {
                     modalImage.style.backgroundImage = 'none';
                     modalImage.style.backgroundColor = '#2a2a2a';
                 }
-                
                 modal.style.display = 'block';
             }
         });
     });
-    
-    // Закрытие основного модального окна
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
-        });
-    }
-    
-    // 2. ГАЛЕРЕЯ
+
+    if (closeBtn) closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
+
+    /* ---------- GALLERY MODAL ---------- */
     const galleryModal = document.getElementById('gallery-modal');
     const galleryGrid = document.getElementById('gallery-grid');
     const galleryCloseBtn = galleryModal?.querySelector('.gallery-close');
     const galleryBtn = document.getElementById('gallery-btn');
     const hiddenGalleryContent = document.getElementById('hidden-gallery-content');
 
-    // Функция для загрузки изображений в галерею
     function loadGallery() {
         if (!galleryGrid || !hiddenGalleryContent) return;
-        galleryGrid.innerHTML = ''; // Очищаем перед загрузкой
-        
-        const galleryItems = hiddenGalleryContent.querySelectorAll('.gallery-item-src');
-        
-        galleryItems.forEach(item => {
+        galleryGrid.innerHTML = '';
+        hiddenGalleryContent.querySelectorAll('.gallery-item-src').forEach(item => {
             const imageDiv = item.querySelector('.gallery-image-src');
             const caption = item.querySelector('.gallery-caption-src')?.textContent || '';
             const imageSrc = imageDiv?.getAttribute('data-src') || '';
-            
+
             const galleryItem = document.createElement('div');
             galleryItem.className = 'gallery-item';
-            
             const imgDiv = document.createElement('div');
             imgDiv.className = 'gallery-item-image';
             imgDiv.style.backgroundImage = `url('${imageSrc}')`;
             imgDiv.style.backgroundSize = 'cover';
             imgDiv.style.backgroundPosition = 'center';
-            
             const captionDiv = document.createElement('div');
             captionDiv.className = 'gallery-item-caption';
             captionDiv.textContent = caption;
-            
+
             galleryItem.appendChild(imgDiv);
             galleryItem.appendChild(captionDiv);
             galleryGrid.appendChild(galleryItem);
         });
+        addGalleryImageClickHandlers();
     }
 
-    // Открытие галереи
     if (galleryBtn && galleryModal) {
         galleryBtn.addEventListener('click', function(e) {
             e.preventDefault();
             loadGallery();
             galleryModal.style.display = 'block';
+            setTimeout(addGalleryImageClickHandlers, 100);
         });
     }
 
-    // Закрытие галереи
-    if (galleryCloseBtn && galleryModal) {
-        galleryCloseBtn.addEventListener('click', function() {
-            galleryModal.style.display = 'none';
-        });
-    }
+    if (galleryCloseBtn) galleryCloseBtn.addEventListener('click', () => { galleryModal.style.display = 'none'; });
 
-    // 3. ИНФОРМАЦИОННЫЕ МОДАЛЬНЫЕ ОКНА (Материалы и Контакты)
+    /* ---------- INFO MODALS (SOURCES & CONTACTS) ---------- */
     const infoModal = document.getElementById('info-modal');
     const infoModalTitle = document.getElementById('info-modal-title');
     const infoModalText = document.getElementById('info-modal-text');
     const infoCloseBtn = infoModal?.querySelector('.info-close');
     const sourcesBtn = document.getElementById('sources-btn');
     const contactsBtn = document.getElementById('contacts-btn');
-    
     const hiddenSourcesContent = document.getElementById('hidden-sources-content');
     const hiddenContactsContent = document.getElementById('hidden-contacts-content');
 
-    // Функция для заполнения информационного окна
     function fillInfoModal(contentElement) {
         if (!infoModalText || !infoModalTitle || !contentElement) return;
-        
-        const title = contentElement.querySelector('.info-title')?.textContent || '';
-        const textContent = contentElement.querySelector('.info-text')?.innerHTML || '';
-        
-        infoModalTitle.textContent = title;
-        infoModalText.innerHTML = textContent;
+        infoModalTitle.textContent = contentElement.querySelector('.info-title')?.textContent || '';
+        infoModalText.innerHTML = contentElement.querySelector('.info-text')?.innerHTML || '';
     }
 
-    // Открытие модального окна "Материалы и источники"
-    if (sourcesBtn && infoModal) {
-        sourcesBtn.addEventListener('click', function(e) {
+    if (sourcesBtn) {
+        sourcesBtn.addEventListener('click', e => {
             e.preventDefault();
-            if (hiddenSourcesContent) {
-                fillInfoModal(hiddenSourcesContent);
-                infoModal.style.display = 'block';
-            }
+            if (hiddenSourcesContent) { fillInfoModal(hiddenSourcesContent); infoModal.style.display = 'block'; }
         });
     }
-
-    // Открытие модального окна "Контакты и авторство"
-    if (contactsBtn && infoModal) {
-        contactsBtn.addEventListener('click', function(e) {
+    if (contactsBtn) {
+        contactsBtn.addEventListener('click', e => {
             e.preventDefault();
-            if (hiddenContactsContent) {
-                fillInfoModal(hiddenContactsContent);
-                infoModal.style.display = 'block';
-            }
+            if (hiddenContactsContent) { fillInfoModal(hiddenContactsContent); infoModal.style.display = 'block'; }
         });
     }
+    if (infoCloseBtn) infoCloseBtn.addEventListener('click', () => { infoModal.style.display = 'none'; });
 
-    // Закрытие информационного модального окна
-    if (infoCloseBtn && infoModal) {
-        infoCloseBtn.addEventListener('click', function() {
-            infoModal.style.display = 'none';
-        });
-    }
-
-    // Общая функция закрытия модалок по клику вне окна и по Escape
-    window.addEventListener('click', function(e) {
-        if (modal && e.target === modal) {
-            modal.style.display = 'none';
-        }
-        if (galleryModal && e.target === galleryModal) {
-            galleryModal.style.display = 'none';
-        }
-        if (infoModal && e.target === infoModal) {
-            infoModal.style.display = 'none';
-        }
+    /* ---------- GLOBAL MODAL CLOSING ---------- */
+    window.addEventListener('click', e => {
+        if (modal && e.target === modal) modal.style.display = 'none';
+        if (galleryModal && e.target === galleryModal) galleryModal.style.display = 'none';
+        if (infoModal && e.target === infoModal) infoModal.style.display = 'none';
+        if (contentModal && e.target === contentModal) contentModal.style.display = 'none';
     });
 
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
-            if (modal && modal.style.display === 'block') {
-                modal.style.display = 'none';
-            }
-            if (galleryModal && galleryModal.style.display === 'block') {
-                galleryModal.style.display = 'none';
-            }
-            if (infoModal && infoModal.style.display === 'block') {
-                infoModal.style.display = 'none';
-            }
-            if (contentModal && contentModal.style.display === 'block') {
-                contentModal.style.display = 'none';
-            }
+            [modal, galleryModal, infoModal, contentModal].forEach(m => { if (m && m.style.display === 'block') m.style.display = 'none'; });
         }
     });
 
-    // === МОДАЛЬНОЕ ОКНО ДЛЯ УВЕЛИЧЕНИЯ ИЗОБРАЖЕНИЙ ===
-    // Создаем модальное окно для изображений
+    /* ---------- IMAGE VIEW MODAL ---------- */
     const imageModal = document.createElement('div');
     imageModal.className = 'modal image-view-modal';
     imageModal.id = 'image-view-modal';
@@ -310,73 +218,37 @@ document.addEventListener('DOMContentLoaded', function() {
     const imageCaption = document.getElementById('image-caption');
     const imageCloseBtn = imageModal.querySelector('.image-modal-close');
 
-    // Функция для извлечения подписи из атрибута data-caption или создания на основе пути
     function getImageCaption(imgElement) {
-        if (imgElement.dataset.caption) {
-            return imgElement.dataset.caption;
-        }
-        
+        if (imgElement.dataset.caption) return imgElement.dataset.caption;
         const src = imgElement.src || '';
         if (src.includes('section_images/')) {
             const fileName = src.split('/').pop().split('.').slice(0, -1).join('.');
             return fileName.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim();
         }
-        
         return '';
     }
 
-    // Добавляем обработчики на все изображения в секциях
     document.querySelectorAll('.section-image-placeholder img').forEach(img => {
         img.style.cursor = 'pointer';
         img.style.transition = 'opacity 0.3s ease';
-        
-        img.addEventListener('mouseenter', () => {
-            img.style.opacity = '0.9';
-        });
-        
-        img.addEventListener('mouseleave', () => {
-            img.style.opacity = '1';
-        });
-
+        img.addEventListener('mouseenter', () => img.style.opacity = '0.9');
+        img.addEventListener('mouseleave', () => img.style.opacity = '1');
         img.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
+            e.preventDefault(); e.stopPropagation();
             imageModalImg.src = this.src;
             imageModalImg.alt = this.alt || 'Увеличенное изображение';
-            
             const caption = getImageCaption(this);
-            if (caption) {
-                imageCaption.textContent = caption;
-                imageCaption.style.display = 'block';
-            } else {
-                imageCaption.style.display = 'none';
-            }
-            
+            if (caption) { imageCaption.textContent = caption; imageCaption.style.display = 'block'; }
+            else imageCaption.style.display = 'none';
             imageModal.style.display = 'block';
         });
     });
 
-    // Закрытие модального окна изображений
-    if (imageCloseBtn) {
-        imageCloseBtn.addEventListener('click', function() {
-            imageModal.style.display = 'none';
-        });
-    }
+    if (imageCloseBtn) imageCloseBtn.addEventListener('click', () => { imageModal.style.display = 'none'; });
+    imageModal.addEventListener('click', e => { if (e.target === imageModal) imageModal.style.display = 'none'; });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && imageModal.style.display === 'block') imageModal.style.display = 'none'; });
 
-    imageModal.addEventListener('click', function(e) {
-        if (e.target === imageModal) {
-            imageModal.style.display = 'none';
-        }
-    });
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && imageModal.style.display === 'block') {
-            imageModal.style.display = 'none';
-        }
-    });
-
-    // Добавляем data-caption к изображениям в section_images
+    /* ---------- IMAGE CAPTIONS SETUP ---------- */
     const sectionImages = document.querySelectorAll('.section-image-placeholder img[src*="section_images/"]');
     const imageCaptions = {
         'destab.png': 'Военный переворот в Грузии, декабрь 1992 года',
@@ -398,101 +270,32 @@ document.addEventListener('DOMContentLoaded', function() {
         'desant.PNG': 'Разведчики ВДВ в порту Поти, 12 августа 2008',
         'poteri.png': 'Траур в память жертв боевых действий в Южной Осетии'
     };
-
     sectionImages.forEach(img => {
         const src = img.src;
         for (const [filename, caption] of Object.entries(imageCaptions)) {
-            if (src.includes(filename)) {
-                img.dataset.caption = caption;
-                break;
-            }
+            if (src.includes(filename)) { img.dataset.caption = caption; break; }
         }
     });
-    
-    // === ДОПОЛНЕНИЕ: Открытие изображений из галереи в увеличенном виде ===
-    // Добавляем обработчики для изображений в галерее
+
+    /* ---------- GALLERY IMAGE CLICK HANDLERS ---------- */
     function addGalleryImageClickHandlers() {
-        const galleryItems = document.querySelectorAll('.gallery-item-image');
-        
-        galleryItems.forEach((item, index) => {
+        document.querySelectorAll('.gallery-item-image').forEach(item => {
             item.style.cursor = 'pointer';
             item.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Получаем фоновое изображение
-                const bgImage = this.style.backgroundImage;
-                const imageUrl = bgImage.slice(5, -2); // Убираем url(" и ")
-                
-                // Получаем подпись
+                e.preventDefault(); e.stopPropagation();
+                const imageUrl = this.style.backgroundImage.slice(5, -2);
                 const caption = this.nextElementSibling?.textContent || '';
-                
-                // Устанавливаем в модальное окно
                 const imageModal = document.getElementById('image-view-modal');
                 const imageModalImg = document.getElementById('expanded-image');
                 const imageCaption = document.getElementById('image-caption');
-                
                 if (imageModal && imageModalImg) {
                     imageModalImg.src = imageUrl;
                     imageModalImg.alt = caption || 'Изображение из галереи';
-                    
-                    if (caption) {
-                        imageCaption.textContent = caption;
-                        imageCaption.style.display = 'block';
-                    } else {
-                        imageCaption.style.display = 'none';
-                    }
-                    
+                    if (caption) { imageCaption.textContent = caption; imageCaption.style.display = 'block'; }
+                    else imageCaption.style.display = 'none';
                     imageModal.style.display = 'block';
                 }
             });
-        });
-    }
-
-    // Модифицируем функцию loadGallery для добавления обработчиков после загрузки
-    const originalLoadGallery = loadGallery;
-    loadGallery = function() {
-        if (!galleryGrid || !hiddenGalleryContent) return;
-        galleryGrid.innerHTML = ''; // Очищаем перед загрузкой
-        
-        const galleryItems = hiddenGalleryContent.querySelectorAll('.gallery-item-src');
-        
-        galleryItems.forEach(item => {
-            const imageDiv = item.querySelector('.gallery-image-src');
-            const caption = item.querySelector('.gallery-caption-src')?.textContent || '';
-            const imageSrc = imageDiv?.getAttribute('data-src') || '';
-            
-            const galleryItem = document.createElement('div');
-            galleryItem.className = 'gallery-item';
-            
-            const imgDiv = document.createElement('div');
-            imgDiv.className = 'gallery-item-image';
-            imgDiv.style.backgroundImage = `url('${imageSrc}')`;
-            imgDiv.style.backgroundSize = 'cover';
-            imgDiv.style.backgroundPosition = 'center';
-            
-            const captionDiv = document.createElement('div');
-            captionDiv.className = 'gallery-item-caption';
-            captionDiv.textContent = caption;
-            
-            galleryItem.appendChild(imgDiv);
-            galleryItem.appendChild(captionDiv);
-            galleryGrid.appendChild(galleryItem);
-        });
-        
-        // Добавляем обработчики для новых изображений
-        addGalleryImageClickHandlers();
-    };
-
-    // Также добавляем обработчики при открытии галереи, если изображения уже загружены
-    if (galleryBtn && galleryModal) {
-        galleryBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            loadGallery();
-            galleryModal.style.display = 'block';
-            
-            // Добавляем обработчики после загрузки (на всякий случай)
-            setTimeout(addGalleryImageClickHandlers, 100);
         });
     }
 });
