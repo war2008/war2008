@@ -39,32 +39,10 @@ main {
     min-height: 100vh;
 }
 
-html, body {
-    height: 100%;
-    scroll-behavior: smooth;
-}
-
-main {
-    scroll-snap-type: y mandatory;
-    overflow-y: scroll;
-    height: 100vh;
-}
-
-.section {
-    scroll-snap-align: start;
-}
-
+/* Universal reset */
 * {
     margin: 0;
     padding: 0;
-}
-
-html {
-    height: 100%;
-}
-
-body {
-    min-height: 100vh;
 }
 
 /* Fixed logo section: Styles for logos that remain in place during scroll, with a mix-blend-mode effect */
@@ -1398,5 +1376,15 @@ body {
         font-size: 22px !important;
         padding: 14px 20px !important;
         min-height: 65px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    html, body {
+        scroll-behavior: auto !important;
+    }
+
+    main {
+        scroll-snap-type: none !important;
     }
 }

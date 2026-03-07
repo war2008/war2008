@@ -1,6 +1,7 @@
 // preloader.js (cinematic warmup version)
 (function () {
 
+
 const config = {
     backgroundStart: 'rgba(0,0,0,0.75)',
     backgroundWarm: 'rgba(0,0,0,0.96)',
@@ -16,7 +17,9 @@ const config = {
     fadeOutTime: 500
 };
 
+
 class Preloader {
+
 
     constructor(config){
         this.config=config;
@@ -24,12 +27,15 @@ class Preloader {
         this.targetProgress=0;
     }
 
+
     isDesktop(){
         return window.matchMedia('(min-width:1024px)').matches &&
                !('ontouchstart' in window);
     }
 
+
     /* ---------- PROGRESS SHOW ---------- */
+
 
     startFakeProgress(){
         const tick=()=>{
@@ -43,11 +49,14 @@ class Preloader {
         tick();
     }
 
+
     setTarget(val){
         this.targetProgress=Math.min(100,val);
     }
 
+
     /* ---------- CREATE ---------- */
+
 
     create(){
 
@@ -116,6 +125,7 @@ class Preloader {
         return this.preloader;
     }
 
+
     addAnim(){
         if(document.getElementById('spin')) return;
         const s=document.createElement('style');
@@ -128,7 +138,9 @@ class Preloader {
         document.head.appendChild(s);
     }
 
+
     /* ---------- IMAGE LOAD ---------- */
+
 
     waitImages(){
         return new Promise(resolve=>{
@@ -155,14 +167,11 @@ class Preloader {
         });
     }
 
+
     /* ---------- WARMUP ---------- */
 
-    async mechanicalScroll() {
 
-        if(!this.isDesktop()){
-            this.setTarget(100);
-            return;
-        }
+    async mechanicalScroll() {
 
         this.preloader.style.background = config.backgroundWarm;
         this.preloader.style.backdropFilter = `blur(${config.blurWarm})`;
@@ -195,7 +204,9 @@ class Preloader {
         await delay(120);
     }
 
+
     /* ---------- INIT ---------- */
+
 
     async init(){
 
@@ -228,10 +239,12 @@ class Preloader {
     }
 }
 
+
 if(document.readyState==='loading'){
     document.addEventListener('DOMContentLoaded',()=>new Preloader(config).init());
 }else{
     new Preloader(config).init();
 }
+
 
 })();
